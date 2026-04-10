@@ -1,1 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>gaurav — intro</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-overlay: rgba(250, 248, 245, 0.68);
+      --sidebar-bg: rgba(240, 238, 235, 0.45);
+      --border-color: rgba(255, 255, 255, 0.55);
+      --border-subtle: rgba(0, 0, 0, 0.05);
+      --text-main: #2b2927;
+      --text-muted: #6b6660;
+      --text-faint: #a09a94;
+      --accent: #8b5cf6;
+      --accent-bg: rgba(139, 92, 246, 0.12);
+      --accent-soft: rgba(139, 92, 246, 0.06);
+      --selection: rgba(139, 92, 246, 0.2);
+      --shadow: rgba(0, 0, 0, 0.12);
+      --title-bg: rgba(255, 255, 255, 0.32);
+      --card-bg: rgba(255,255,255,0.28);
+      --divider: rgba(0,0,0,0.07);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-overlay: rgba(18, 16, 16, 0.72);
+        --sidebar-bg: rgba(10, 9, 9, 0.45);
+        --border-color: rgba(255, 255, 255, 0.10);
+        --border-subtle: rgba(255, 255, 255, 0.05);
+        --text-main: #f0eae1;
+        --text-muted: #9e978e;
+        --text-faint: #6b6560;
+        --accent: #a78bfa;
+        --accent-bg: rgba(167, 139, 250, 0.18);
+        --accent-soft: rgba(167, 139, 250, 0.07);
+        --shadow: rgba(0, 0, 0, 0.45);
+        --title-bg: rgba(0, 0, 0, 0.22);
+        --card-bg: rgba(255,255,255,0.04);
+        --divider: rgba(255,255,255,0.07);
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    ::selection { background: var(--selection); }
+
+    body {
+      background-image: url('https://images.unsplash.com/photo-1557672172-298e090bd0f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=2560&q=80');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      font-family: 'Inter', sans-serif;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-font-smoothing: antialiased;
+      padding: 16px;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Instrument Serif', serif;
+      font-weight: 400;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    a:hover { opacity: 0.75; text-decoration: underline; }
+
+    .window {
+      width: min(88vw, 780px);
+      background: var(--bg-overlay);
+      backdrop-filter: blur(32px);
+      -webkit-backdrop-filter: blur(32px);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      box-shadow: 0 28px 70px var(--shadow);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: windowEnter 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+      transform: scale(0.97) translateY(14px);
+    }
+
+    @keyframes windowEnter {
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .title-bar {
+      height: 44px;
+      background: var(--title-bg);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      position: relative;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .traffic-lights { display: flex; gap: 8px; }
+
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot.red    { background: #ff5f56; border: 1px solid #e0443e; }
+    .dot.yellow { background: #ffbd2e; border: 1px solid #dea123; }
+    .dot.green  { background: #27c93f; border: 1px solid #1aab29; }
+
+    @media (prefers-color-scheme: dark) {
+      .dot { border: none; }
+    }
+
+    .win-title {
+      position: absolute;
+      left: 50%; transform: translateX(-50%);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
+    }
+
+    .content-area {
+      padding: 44px 52px 52px;
+      overflow-y: auto;
+    }
+
+    .content-area::-webkit-scrollbar { width: 6px; }
+    .content-area::-webkit-scrollbar-track { background: transparent; }
+    .content-area::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+
+    .file-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 1.4rem;
+    }
+    .file-label .dot-sm {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.7;
+    }
+
+    .page-hero {
+      font-size: clamp(2.6rem, 6vw, 4rem);
+      font-style: italic;
+      line-height: 1.08;
+      letter-spacing: -0.025em;
+      margin-bottom: 0.5rem;
+      color: var(--text-main);
+    }
+    .page-hero span { color: var(--accent); font-style: normal; }
+
+    .tagline {
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      margin-bottom: 2.4rem;
+      line-height: 1.5;
+    }
+
+    hr.soft {
+      border: none;
+      border-top: 1px solid var(--divider);
+      margin: 2rem 0;
+    }
+
+    .prose p {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+      max-width: 60ch;
+    }
+    .prose p strong { color: var(--text-main); font-weight: 500; }
+    .prose p:last-child { margin-bottom: 0; }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 1rem;
+      margin-top: 2.4rem;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-bottom: 0.4rem;
+    }
+    .chip {
+      padding: 0.35rem 0.9rem;
+      border-radius: 2rem;
+      background: var(--sidebar-bg);
+      border: 1px solid var(--border-color);
+      font-size: 0.85rem;
+      color: var(--text-main);
+      font-weight: 500;
+      transition: transform 0.18s, background 0.18s;
+      cursor: default;
+    }
+    .chip:hover { transform: translateY(-2px); background: var(--accent-bg); }
+    .chip.accent {
+      background: var(--accent-bg);
+      border-color: rgba(139, 92, 246, 0.25);
+      color: var(--accent);
+    }
+
+    .bento {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.2rem;
+    }
+
+    .bento-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1.2rem 1.4rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .bento-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px var(--shadow);
+    }
+    .bento-card .card-icon { font-size: 1.4rem; margin-bottom: 0.5rem; }
+    .bento-card h3 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--text-main);
+      margin-bottom: 0.35rem;
+    }
+    .bento-card p { font-size: 0.85rem; line-height: 1.6; color: var(--text-muted); }
+    .bento-card.wide { grid-column: span 2; }
+
+    .now-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin-top: 0.2rem;
+    }
+    .now-list li {
+      display: flex;
+      align-items: baseline;
+      gap: 0.7rem;
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .now-list li .label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--accent);
+      white-space: nowrap;
+      min-width: 72px;
+    }
+    .now-list li .val { color: var(--text-main); font-weight: 500; }
+
+    .contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.2rem;
+    }
+    .contact-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      background: var(--sidebar-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .contact-btn:hover {
+      background: var(--text-main);
+      color: var(--bg-overlay);
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+      transform: translateY(-2px);
+    }
+
+    .footer-note {
+      font-size: 0.78rem;
+      color: var(--text-faint);
+      margin-top: 2.4rem;
+      text-align: center;
+      letter-spacing: 0.01em;
+    }
+
+    @media (max-width: 580px) {
+      .window { width: 100vw; border-radius: 0; border: none; }
+      .content-area { padding: 28px 24px 40px; }
+      .bento { grid-template-columns: 1fr; }
+      .bento-card.wide { grid-column: span 1; }
+      .page-hero { font-size: 2.4rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="window">
+
+    <div class="title-bar">
+      <div class="traffic-lights">
+        <div class="dot red"></div>
+        <div class="dot yellow"></div>
+        <div class="dot green"></div>
+      </div>
+      <div class="win-title">intro.txt — gaurav</div>
+    </div>
+
+    <div class="content-area">
+
+      <div class="file-label">
+        <span class="dot-sm"></span>
+        intro.txt
+      </div>
+
+      <h1 class="page-hero">hey, I'm <span>gaurav.</span></h1>
+      <p class="tagline">undergrad · coffee person · always in the middle of something.</p>
+
+      <hr class="soft">
+
+      <div class="prose">
+        <p>
+          I'm from <strong>Kolhapur, Maharashtra</strong> — grew up with misal and an unhealthy
+          obsession with quizzes. Right now I'm studying at IISER Berhampur, far from home but slowly
+          finding my own rhythm here.
+        </p>
+        <p>
+          You'll most likely find me hovering over a <strong>V60 or an espresso puck</strong>, tinkering
+          with some web side-project at odd hours, or deep in a quiz competition that I was definitely
+          not prepared enough for.
+        </p>
+        <p>
+          This is just a little corner of the internet where I get to exist without an agenda.
+          No thesis, no CV bullet points — just the things I'm into.
+        </p>
+      </div>
+
+      <p class="section-label">/ currently</p>
+      <ul class="now-list">
+        <li>
+          <span class="label">brewing</span>
+          <span class="val">Ethiopian Yirgacheffe on the V60, medium-fine grind</span>
+        </li>
+        <li>
+          <span class="label">listening</span>
+          <span class="val">indie & alternative — something upbeat for 2 am sessions</span>
+        </li>
+        <li>
+          <span class="label">building</span>
+          <span class="val">a small web thing with TypeScript + Cloudflare Workers</span>
+        </li>
+        <li>
+          <span class="label">reading</span>
+          <span class="val">reddit rabbit holes and the occasional novel</span>
+        </li>
+      </ul>
+
+      <p class="section-label">/ a few things about me</p>
+      <div class="bento">
+        <div class="bento-card">
+          <div class="card-icon">☕</div>
+          <h3>coffee rituals</h3>
+          <p>Pour-over, espresso, AeroPress — I track every brew. Dialling in ratios is my version of meditation.</p>
+        </div>
+        <div class="bento-card">
+          <div class="card-icon">🎵</div>
+          <h3>music moods</h3>
+          <p>My playlists swing wildly depending on what I'm doing. Upbeat indie for coding, lo-fi for reading.</p>
+        </div>
+        <div class="bento-card">
+          <div class="card-icon">⌨️</div>
+          <h3>tinkering online</h3>
+          <p>I enjoy building small tools and personal sites — TypeScript, SQL, a bit of R. Cloudflare is my playground.</p>
+        </div>
+        <div class="bento-card">
+          <div class="card-icon">🧩</div>
+          <h3>quiz & community</h3>
+          <p>Vice coordinator of QCell, our college quiz club. I like questions that make you say "I should have known that."</p>
+        </div>
+        <div class="bento-card wide">
+          <div class="card-icon">🌱</div>
+          <h3>slowly figuring it out</h3>
+          <p>I'm in that particular phase of life where everything feels like a draft. I like that — it means there's still room to edit. Best things take time, I'm told. I believe it.</p>
+        </div>
+      </div>
+
+      <p class="section-label">/ into these days</p>
+      <div class="chip-row">
+        <span class="chip accent">specialty coffee</span>
+        <span class="chip">pour-over methods</span>
+        <span class="chip">web side-projects</span>
+        <span class="chip">quiz competitions</span>
+        <span class="chip">indie music</span>
+        <span class="chip">community building</span>
+        <span class="chip">long walks nowhere</span>
+        <span class="chip">r/IndiaCoffee</span>
+        <span class="chip">late-night reading</span>
+      </div>
+
+      <p class="section-label">/ find me here</p>
+      <div class="contact-row">
+        <a href="mailto:gaurav@example.com" class="contact-btn" target="_blank" rel="noopener noreferrer">
+          ✉️ email me
+        </a>
+        <a href="https://instagram.com" class="contact-btn" target="_blank" rel="noopener noreferrer">
+          📷 instagram
+        </a>
+        <a href="https://github.com" class="contact-btn" target="_blank" rel="noopener noreferrer">
+          🐙 github
+        </a>
+      </div>
+
+      <p class="footer-note">made with too much coffee and a bit of care &nbsp;·&nbsp; kolhapur → berhampur</p>
+
+    </div>
+  </div>
+</body>
+</html>
