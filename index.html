@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>gaurav's digital space</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            /* Light mode variables */
+            --bg-overlay: rgba(250, 248, 245, 0.65);
+            --sidebar-bg: rgba(240, 238, 235, 0.4);
+            --border-color: rgba(255, 255, 255, 0.5);
+            --border-subtle: rgba(0, 0, 0, 0.05);
+            --text-main: #2b2927;
+            --text-muted: #6b6660;
+            --accent: #8b5cf6;
+            --accent-bg: rgba(139, 92, 246, 0.15);
+            --selection: rgba(139, 92, 246, 0.2);
+            --shadow: rgba(0, 0, 0, 0.1);
+            --title-bg: rgba(255, 255, 255, 0.3);
+            /* Coffee color for 3d */
+            --coffee-3d: #6F4E37;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                /* Dark mode variables */
+                --bg-overlay: rgba(20, 18, 18, 0.7);
+                --sidebar-bg: rgba(10, 9, 9, 0.4);
+                --border-color: rgba(255, 255, 255, 0.1);
+                --border-subtle: rgba(255, 255, 255, 0.05);
+                --text-main: #f0eae1;
+                --text-muted: #9e978e;
+                --accent: #a78bfa;
+                --accent-bg: rgba(167, 139, 250, 0.2);
+                --shadow: rgba(0, 0, 0, 0.4);
+                --title-bg: rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        ::selection {
+            background: var(--selection);
+        }
+
+        body {
+            /* Vibrant colorful background image */
+            background-image: url('https://images.unsplash.com/photo-1557672172-298e090bd0f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=2560&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Instrument Serif', serif;
+            font-weight: 400;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        /* Desktop Window */
+        .window {
+            width: 85vw;
+            height: 80vh;
+            max-width: 1100px;
+            background: var(--bg-overlay);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 25px 60px var(--shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: windowEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: scale(0.98) translateY(10px);
+        }
+
+        @keyframes windowEnter {
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Title Bar */
+        .title-bar {
+            height: 44px;
+            background: var(--title-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .traffic-lights {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot.red {
+            background: #ff5f56;
+            border: 1px solid #e0443e;
+        }
+
+        .dot.yellow {
+            background: #ffbd2e;
+            border: 1px solid #dea123;
+        }
+
+        .dot.green {
+            background: #27c93f;
+            border: 1px solid #1aab29;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .dot {
+                border: none;
+            }
+        }
+
+        .title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            letter-spacing: 0.02em;
+        }
+
+        /* Window Body (Tabs + Content) */
+        .window-body {
+            display: flex;
+            flex-direction: column;
+            /* Changed to column for horizontal tabs */
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Horizontal Tab Bar */
+        .tab-bar {
+            width: 100%;
+            background: var(--sidebar-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 8px 16px;
+            display: flex;
+            flex-direction: row;
+            gap: 12px;
+            overflow-x: auto;
+            flex-shrink: 0;
+            align-items: center;
+        }
+
+        /* Hide Scrollbar in Tab bar */
+        .tab-bar::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .tab-bar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .tab-bar::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, transform 0.1s;
+            border: 1px solid transparent;
+            white-space: nowrap;
+        }
+
+        .nav-item:hover {
+            background: var(--border-subtle);
+            color: var(--text-main);
+        }
+
+        .nav-item:active {
+            transform: scale(0.98);
+        }
+
+        .nav-item.active {
+            background: var(--bg-overlay);
+            color: var(--accent);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+
+        .nav-icon {
+            font-size: 1.1rem;
+        }
+
+        /* Main Content Area */
+        .content-area {
+            flex: 1;
+            position: relative;
+            background: transparent;
+            overflow-y: auto;
+            padding: 40px;
+        }
+
+        /* Hide Scrollbar for cleaner look */
+        .content-area::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .content-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .content-area::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        .tab-content {
+            display: none;
+            max-width: 680px;
+            margin: 0 auto;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Typography & Styles inside Editor */
+        .page-title {
+            font-size: 3.5rem;
+            font-style: italic;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .text-block {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .text-block strong {
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        /* Specific Components */
+        .coffee-list {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .coffee-list li {
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            color: var(--text-main);
+            font-weight: 500;
+            transition: transform 0.2s;
+        }
+
+        .coffee-list li:hover {
+            transform: translateY(-2px);
+            background: var(--accent-bg);
+        }
+
+        /* Coffee 3D Container */
+        #coffee-3d-container {
+            width: 100%;
+            height: 280px;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .music-list {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+
+        .song {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            padding: 1rem;
+            border-radius: 12px;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+            transition: transform 0.2s;
+        }
+
+        .song:hover {
+            transform: translateY(-2px);
+        }
+
+        .song-art {
+            width: 48px;
+            height: 48px;
+            background: var(--accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            background-image: linear-gradient(135deg, var(--accent) 0%, #d8b4fe 100%);
+        }
+
+        .song-details h4 {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.2rem;
+        }
+
+        .song-details span {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .links-grid {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .link-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .link-btn:hover {
+            background: var(--text-main);
+            color: var(--bg-overlay);
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .window {
+                width: 100vw;
+                height: 100vh;
+                border-radius: 0;
+                border: none;
+            }
+
+            .content-area {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="window">
+        <!-- OS Title Bar -->
+        <div class="title-bar">
+            <div class="traffic-lights">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+            </div>
+            <div class="title">gaurav.exe</div>
+        </div>
+
+        <!-- Layout Body -->
+        <div class="window-body">
+
+            <!-- Horizontal Tab Bar (Navigation) -->
+            <div class="tab-bar">
+                <div class="nav-item active" data-tab="intro">
+                    <span class="nav-icon">📝</span> intro.txt
+                </div>
+                <div class="nav-item" data-tab="coffee" id="nav-coffee">
+                    <span class="nav-icon">☕</span> coffee_station.md
+                </div>
+                <div class="nav-item" data-tab="music">
+                    <span class="nav-icon">🎵</span> on_repeat.mp3
+                </div>
+                <div class="nav-item" data-tab="contact">
+                    <span class="nav-icon">👋</span> say_hi.html
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area">
+
+                <!-- Tab: Intro -->
+                <div id="intro" class="tab-content active">
+                    <h1 class="page-title">my current thoughts</h1>
+                    <p class="text-block">It's nice to finally have a space that isn't just about what I do, but just...
+                        a place to exist online. Slowly realizing that the best things take time.</p>
+                    <p class="text-block">This interface feels a bit more like 'home' to me—like pulling up an old text
+                        editor or digging into email folders. Hopefully this little corner makes you feel a bit of calm
+                        too.</p>
+                </div>
+
+                <!-- Tab: Coffee -->
+                <div id="coffee" class="tab-content">
+                    <!-- The 3D Coffee Element Container -->
+                    <div id="coffee-3d-container">
+                        <div
+                            style="position: absolute; top: 1rem; left: 1.5rem; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); z-index: 10; letter-spacing: 0.05em; text-transform: uppercase;">
+                            Interactive Cup</div>
+                    </div>
+
+                    <h1 class="page-title">the coffee obsession</h1>
+                    <p class="text-block">I track my coffee obsessively. It's more than just caffeine; it's a daily
+                        ritual of dialing in beans, testing ratios, and chasing the perfect cup.</p>
+                    <p class="text-block">From the smell of freshly ground beans to the slow pour, it's my grounding
+                        moment.</p>
+
+                    <img src="coffeestation.jpg" alt="My Coffee Station"
+                        style="width: 100%; border-radius: 12px; margin-top: 1rem; border: 1px solid var(--border-color); box-shadow: 0 4px 20px var(--shadow);">
+
+                    <h3 style="margin-top: 2rem; color: var(--text-main);">My Station</h3>
+                    <ul class="coffee-list">
+                        <li>Dedica Duo</li>
+                        <li>1zpresso Q Air</li>
+                        <li>Hario V60</li>
+                        <li>AeroPress</li>
+                        <li>French Press</li>
+                    </ul>
+                </div>
+
+                <!-- Tab: Music -->
+                <div id="music" class="tab-content">
+                    <h1 class="page-title">on repeat</h1>
+                    <p class="text-block">Songs that have been keeping me company recently.</p>
+
+                    <div style="margin-top: 1.5rem;">
+                        <iframe allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" frameborder="0"
+                            height="450" style="width:100%;max-width:660px;overflow:hidden;border-radius:10px;"
+                            sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+                            src="https://embed.music.apple.com/in/playlist/buzzedonbrew/pl.u-zPyLLR3tey0Lq3E"></iframe>
+                    </div>
+                </div>
+
+                <!-- Tab: Contact -->
+                <div id="contact" class="tab-content">
+                    <h1 class="page-title">say hi</h1>
+                    <p class="text-block">i'm mostly just hanging around exploring things. feel free to reach out if you
+                        want to chat or read more of my stuff.</p>
+
+                    <div class="links-grid">
+                        <a href="https://instagram.com/thats.gaurav" target="_blank" class="link-btn">
+                            📸 @thats.gaurav
+                        </a>
+                        <a href="https://gauravpowar.substack.com" target="_blank" class="link-btn">
+                            ✍️ @gauravpowar
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for Tab Switching & 3D Coffee Element -->
+    <script type="module">
+        import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js';
+
+        // 1. Tab Switching Logic
+        const navItems = document.querySelectorAll('.nav-item');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // Remove active from all
+                navItems.forEach(nav => nav.classList.remove('active'));
+                tabContents.forEach(tab => tab.classList.remove('active'));
+
+                // Add active to clicked
+                item.classList.add('active');
+                const tabId = item.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // 2. Three.js Initialization for Coffee Mug inside the Coffee Tab
+        const container = document.getElementById('coffee-3d-container');
+
+        const scene = new THREE.Scene();
+
+        // Define aspect ratio based on the container size
+        const w = container.clientWidth || 600;
+        const h = container.clientHeight || 280;
+        const camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
+        camera.position.set(0, 3, 8);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(w, h);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+
+        const dirLight = new THREE.DirectionalLight(0xfff0e6, 1);
+        dirLight.position.set(5, 5, 5);
+        scene.add(dirLight);
+
+        const fillLight = new THREE.DirectionalLight(0xebeae8, 0.5);
+        fillLight.position.set(-5, 0, -5);
+        scene.add(fillLight);
+
+        // Create Stylized Minimalist Coffee Mug Group
+        const mugGroup = new THREE.Group();
+
+        const mugMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xf5f3f0,
+            roughness: 0.2,
+            metalness: 0.1,
+            clearcoat: 0.8,
+            clearcoatRoughness: 0.2,
+            side: THREE.DoubleSide // Important to see inside the cup
+        });
+
+        // The Cup Walls (Open ended Cylinder)
+        const cylinderGeo = new THREE.CylinderGeometry(1.2, 1.2, 2.4, 32, 1, true);
+        const mugBody = new THREE.Mesh(cylinderGeo, mugMaterial);
+        mugBody.position.y = 0;
+        mugGroup.add(mugBody);
+
+        // The Cup Bottom
+        const bottomGeo = new THREE.CircleGeometry(1.2, 32);
+        const mugBottom = new THREE.Mesh(bottomGeo, mugMaterial);
+        mugBottom.rotation.x = Math.PI / 2;
+        mugBottom.position.y = -1.2;
+        mugGroup.add(mugBottom);
+
+        // The Handle (Torus)
+        const torusGeo = new THREE.TorusGeometry(0.7, 0.2, 16, 32);
+        const mugHandle = new THREE.Mesh(torusGeo, mugMaterial);
+        mugHandle.position.set(1.2, 0, 0);
+        mugGroup.add(mugHandle);
+
+        // The Coffee Liquid
+        const coffeeGeo = new THREE.CircleGeometry(1.19, 32);
+        const coffeeMaterial = new THREE.MeshStandardMaterial({
+            color: 0x3d2314, // dark coffee brown 
+            roughness: 0.1 // a bit glossy for liquid
+        });
+        const coffeeLiquid = new THREE.Mesh(coffeeGeo, coffeeMaterial);
+        coffeeLiquid.rotation.x = -Math.PI / 2;
+        coffeeLiquid.position.y = 0.8; // High up inside the cup
+        mugGroup.add(coffeeLiquid);
+
+        // Tilt the group slightly for a better visual angle
+        mugGroup.rotation.z = Math.PI * 0.05;
+        mugGroup.rotation.x = Math.PI * 0.05;
+        scene.add(mugGroup);
+
+        // Handle window resizing and container resizing
+        window.addEventListener('resize', () => {
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        });
+
+        // Mouse Tracking
+        let targetRotX = 0;
+        let targetRotY = 0;
+        let isHovering = false;
+
+        container.addEventListener('mousemove', (e) => {
+            const rect = container.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            // Map mouse to rotation range (-PI to PI for Y, small tilt for X)
+            targetRotY = ((x / rect.width) - 0.5) * Math.PI * 2;
+            targetRotX = ((y / rect.height) - 0.5) * Math.PI * 0.5;
+        });
+
+        container.addEventListener('mouseenter', () => isHovering = true);
+        container.addEventListener('mouseleave', () => isHovering = false);
+
+        // Animation Loop
+        let frame = 0;
+        let idleRotY = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            frame++;
+
+            if (isHovering) {
+                // Interactive mouse control
+                mugGroup.rotation.y += (targetRotY - mugGroup.rotation.y) * 0.1;
+                mugGroup.rotation.x += (Math.PI * 0.05 + targetRotX - mugGroup.rotation.x) * 0.1;
+            } else {
+                // Idle slow spin
+                idleRotY += 0.005;
+                mugGroup.rotation.y += (idleRotY - mugGroup.rotation.y) * 0.05;
+                mugGroup.rotation.x += (Math.PI * 0.1 - mugGroup.rotation.x) * 0.05;
+            }
+
+            // Gentle hovering effect
+            mugGroup.position.y = Math.sin(frame * 0.02) * 0.2;
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+
+</html>
